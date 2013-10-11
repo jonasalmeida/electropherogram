@@ -35,11 +35,16 @@ buildUI:function(id){
 
 },
 
+bin2dec:function(x){ // an ellaboration on jmat.dec2bin
+	return jmat.bin2dec(x.map(function(d){return jmat.dec2bin(d,8)}).join().replace(/\,/g,''))
+},
+
 parseABIF:function(x,cb){
 	// http://www6.appliedbiosystems.com/support/software_community/ABIF_File_Format.pdf
 	x = x.split('').map(function(xi){return xi.charCodeAt(0)});
 	xx=x;
 	if(!cb){cb=function(x){console.log(x)}};
+	var bin2dec=this.bin2dec; // not jmat's !!!!
 	//var abif={}
 	abif={};
 	// parse HEADER (p.7)
@@ -47,17 +52,17 @@ parseABIF:function(x,cb){
 		signature:jmat.char(x.slice(0,4)),
 		version:x[5].toString().replace('0','.'),
 		tagName:jmat.char(x.slice(6,10)),
-		tagNumber:jmat.num2str(x.slice(10,14)),
-		elementType:jmat.num2str(x.slice(14,16)),
-		elementSize:jmat.num2str(x.slice(16,18)),
-		numElements:jmat.num2str(x.slice(18,22)),
-		dataSize:jmat.num2str(x.slice(22,26)),
-		dataOffset:jmat.num2str(x.slice(26,30)),
-		dataHandle:jmat.num2str(x.slice(30,34))
+		tagNumber:bin2dec(x.slice(10,14)),
+		elementType:bin2dec(x.slice(14,16)),
+		elementSize:bin2dec(x.slice(16,18)),
+		numElements:bin2dec(x.slice(18,22)),
+		dataSize:bin2dec(x.slice(22,26)),
+		dataOffset:bin2dec(x.slice(26,30)),
+		dataHandle:bin2dec(x.slice(30,34))
 	}
 	
 	
-	cb(x);
+	cb(abif);
 }
 
 }
