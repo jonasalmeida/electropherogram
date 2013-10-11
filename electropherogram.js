@@ -60,6 +60,35 @@ parseABIF:function(x,cb){
 		dataOffset:bin2dec(x.slice(26,30)),
 		dataHandle:bin2dec(x.slice(30,34))
 	}
+	// parse directory (p.10)
+	abif.dir={
+		tagName:[],
+		tagNumber:[],
+		elementType:[],
+		elementSize:[],
+		numElements:[],
+		dataSize:[],
+		dataOffset:[],
+		dataHandle:[]
+	}
+	ent=[];
+	var dof = abif.header.dataOffset;
+	for(var i=0;i<abif.header.numElements;i++){
+		var entry=x.slice(dof+28*i,dof+28*(i+1));
+		abif.dir[i]={
+			tagName:jmat.char(entry.slice(0,4)),
+			tagNumber:bin2dec(entry.slice(4,8)),
+			elementType:bin2dec(entry.slice(8,10)),
+			elementSize:bin2dec(entry.slice(10,12)),
+			numElements:bin2dec(entry.slice(12,16)),
+			dataSize:bin2dec(entry.slice(16,20)),
+			dataOffset:bin2dec(entry.slice(20,24)),
+			dataHandle:bin2dec(entry.slice(24,28))
+		}
+		ent[i]=entry;
+	}
+	
+	
 	
 	
 	cb(abif);
